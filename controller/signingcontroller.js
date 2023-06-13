@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 
 //USER REGISTER
 const userRegister = async (req, res) => {
+   // console.log("hy")
     try {
         let user = await User.findOne({ email: req.body.email });
         if (user) {
@@ -39,6 +40,8 @@ const userRegister = async (req, res) => {
 
 //VENDOR REGISTER
 const vendorRegister = async (req, res) => {
+    console.log("****")
+    console.log(req.body)
     try {
         let vendor = await Vendor.findOne({ email: req.body.email });
         if (vendor) {

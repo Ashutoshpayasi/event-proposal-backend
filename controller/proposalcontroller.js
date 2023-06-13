@@ -15,7 +15,7 @@ const Vendor = require('../models/vendor');
 const getAllproposal= async (req,res)=>{
     try{
 
-        let proposals= await Proposal.find().populate("VendorId")
+        let proposals= await Proposals.find().populate("VendorId")
         res.status(200).json({status:"success",data:proposals})
     }
     catch(err){

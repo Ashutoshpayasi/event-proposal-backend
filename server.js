@@ -11,36 +11,36 @@ const signingRoutes = require("./Routes/signing");
 const proposalRoutes = require('./Routes/proposal')
 const userRoutes = require('./Routes/user')
 
-const multer = require('multer');
-const bodyParser = require('body-parser');
-const upload = multer();
+//const multer = require('multer');
+//const bodyParser = require('body-parser');
+//const upload = multer();
 app.use(cors({
     origin: "*"
 }))
+app.use(express.json())
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : false}))
-app.use('/',signingRoutes);
+//app.use(express.urlencoded({extended:true}))
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extended : false}))
+app.use('/',express.json(),signingRoutes);
 app.use('/',proposalRoutes);
 app.use('/', userRoutes)
 
 
 
 const PORT = 5000;
-const URL = process.env.DB_URL+ process.env.DB_NAME
+const URL = process.env.DB_URL
 
-mongoose.connect(URL,{
-    useNewUrlParser:true,
-    useUnifiedtopology:true,
-   }).then(()=>{
-    console.log("Database connected successfullly")
-   }).catch((err)=>console.log("connection failed",err.message))
-
+mongoose.connect(URL).then(()=>console.log("Database connected successfullly"))
+.catch((err)=>console.log("connection failed",err.message))
+   
 app.listen(PORT,()=>{
     console.log(`server is running on ${PORT}`)
   })
+
+ // console.log("****")
+  
+  
 
 
 

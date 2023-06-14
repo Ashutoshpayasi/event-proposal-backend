@@ -33,9 +33,10 @@ const getAllproposal= async (req,res)=>{
 
 
 const createProposal = async (req, res) => {
+ // console.log("***")
     try {
       let arr = [];
-      console.log(req.files);
+      //console.log(req.body);
       arr = await req.files.map((file) => file.path);
       for (let i = 0; i < arr.length; i++) {
         let imgUrl = await cloudinary.uploader.upload(arr[i]);
@@ -45,13 +46,13 @@ const createProposal = async (req, res) => {
         ...req.body,
         images: arr,
       });
-      await proposal.save();
+     proposal= await proposal.save();
       res.status(200).json({
         status: "Success",
         data: proposal,
       });
     } catch (err) {
-      res.status(500).send(err.message);
+      res.status(500).json({message:err.message});
     }
   };
   
@@ -131,7 +132,7 @@ const getUserSelectedProposals = async (req, res) => {
       let user = await User.findById(id);
       let proposals = [];
       for (let i = 0; i < user.selected_items.length; i++) {
-          let proposal = await Proposals.findById(user.selected_items[i]).populate("vendorId");
+          let proposal = await Proposals.findById(user.selected_items[i]).populate("VendorId");
           if (proposal) proposals.push(proposal);
       }
       res.status(200).json({
@@ -149,7 +150,7 @@ const getUserSelectedProposals = async (req, res) => {
 //GET VENDOR SPECIFIC PROPOSALS
 const vendorProposals = async (req, res) => {
   try {
-      let proposals = await Proposals.find({ vendorId: req.params.id });
+      let proposals = await Proposals.find({ VendorId: req.params.id });
       res.status(200).json({
           status: "Success",
           data: proposals
@@ -166,7 +167,7 @@ const vendorProposals = async (req, res) => {
 const getSingleProposal = async (req, res) => {
   try {
       let id = req.params.id;
-      let proposal = await Proposals.findById(id).populate("vendorId");
+      let proposal = await Proposals.findById(id).populate("VendorId");
       res.status(200).json({
           status: "Success",
           data: proposal

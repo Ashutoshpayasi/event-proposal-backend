@@ -15,10 +15,6 @@ const proposalmodel= mongoose.Schema({
         type:String,
         required:true
     },
-    eventName:{
-        type:String,
-        required:true
-    },
     eventType:{
         type:String,
         required:true

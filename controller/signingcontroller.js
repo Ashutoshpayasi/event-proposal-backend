@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 //USER REGISTER
 const userRegister = async (req, res) => {
    // console.log("hy")
+   // console.log(req.body)
+    //console.log(req.query)
     try {
         let user = await User.findOne({ email: req.body.email });
         if (user) {
@@ -16,15 +18,19 @@ const userRegister = async (req, res) => {
                 status: 'Failed',
                 message: "Email Id already exists"
             })
-        } else {
+        } 
+        else {
+
             let hashedPassword = await bcrypt.hash(req.body.password, 10);
             let hashedAnswer = await bcrypt.hash(req.body.resetAnswer, 10);
             let newUser = new User({
                 ...req.body,
-                resetAnswer: hashedAnswer,
+                resetPassword: hashedAnswer,
                 password: hashedPassword
             });
+           // console.log(newUser)
             newUser = await newUser.save();
+            console.log("****")
             res.status(200).json({
                 status: 'Success',
                 user: newUser
@@ -40,8 +46,8 @@ const userRegister = async (req, res) => {
 
 //VENDOR REGISTER
 const vendorRegister = async (req, res) => {
-    console.log("****")
-    console.log(req.body)
+    // console.log("****")
+    // console.log(req.body)
     try {
         let vendor = await Vendor.findOne({ email: req.body.email });
         if (vendor) {
@@ -54,7 +60,7 @@ const vendorRegister = async (req, res) => {
             let hashedAnswer = await bcrypt.hash(req.body.resetAnswer, 10);
             let newVendor = new Vendor({
                 ...req.body,
-                resetAnswer: hashedAnswer,
+                resetPassword: hashedAnswer,
                 password: hashedPassword
             });
             newVendor = await newVendor.save();
@@ -74,13 +80,14 @@ const vendorRegister = async (req, res) => {
 
 //USER LOGIN
 const Userlogin = async (req, res) => {
+    //console.log(req.body)
     try {
         let user = await User.findOne({ email: req.body.email });
         if (user) {
             const {name , email , password , contact , resetPassword,isUser,proposals,profile_pic} = user
             if (await bcrypt.compare(req.body.password, user.password)) {
                 let token = await jwt.sign({name , email , password , contact , resetPassword,isUser,proposals,}, process.env.SECRET);
-                res.status(400).json({
+                res.status(200).json({
                     status: "Success",
                     token: token,
                     user: user
